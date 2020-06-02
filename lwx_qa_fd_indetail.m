@@ -97,6 +97,17 @@ end % end s
 meanmotion = mean(motion, 2);
 sd = std(motion, 0, 2);
 
+% Concatenate and sort according to group.
+toplot = cat(2, subID', group', meanmotion, sd);
+toplot = sortrows(toplot, [2 3 1], 'ascend');
+
+% cheap trick
+clear subID group m sd b0
+subID = toplot(:, 1)';
+group = toplot(:, 2)';
+fd = toplot(:, 3)';
+sd = toplot(:, 4)';
+
 % FD plot
 figure(1)
 hold on;
@@ -111,22 +122,22 @@ fontangle = 'italic';
 xticklength = 0;
 alphablend = .8;
 
-gscatter(meanmotion, 1:length(meanmotion), group, [yc_color; oc_color; a_color], '.', 30)
+gscatter(fd, 1:length(fd), group, [yc_color; oc_color; a_color], '.', 30)
 
 hold on;
-for p = 1:length(meanmotion)
+for p = 1:length(fd)
     
     if group(p) == 1 
         
-        plot([meanmotion(p) - abs(sd(p)) meanmotion(p) + abs(sd(p))], [p p], 'Color', yc_color)
+        plot([fd(p) - abs(sd(p)) fd(p) + abs(sd(p))], [p p], 'Color', yc_color)
         
     elseif group(p) == 2 
         
-        plot([meanmotion(p) - abs(sd(p)) meanmotion(p) + abs(sd(p))], [p p], 'Color', oc_color)
+        plot([fd(p) - abs(sd(p)) fd(p) + abs(sd(p))], [p p], 'Color', oc_color)
         
     elseif group(p) == 3 
         
-        plot([meanmotion(p) - abs(sd(p)) meanmotion(p) + abs(sd(p))], [p p], 'Color', a_color)
+        plot([fd(p) - abs(sd(p)) fd(p) + abs(sd(p))], [p p], 'Color', a_color)
         
     end
     
@@ -134,8 +145,8 @@ end
 
 % xaxis
 xax = get(gca, 'xaxis');
-xax.Limits = [0 5];
-xax.TickValues = 0:1:5;
+xax.Limits = [0 6];
+xax.TickValues = 0:1:6;
 xax.TickDirection = 'out';
 xax.TickLength = [xticklength xticklength];
 xax.FontName = fontname;
@@ -150,6 +161,7 @@ yax.TickDirection = 'out';
 yax.TickLabels = lab;
 yax.FontName = fontname;
 yax.FontSize = 8;
+plot([2 2], [0 length(subID)+0.5], ':k')
 
 % general
 a = gca;

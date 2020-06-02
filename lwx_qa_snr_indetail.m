@@ -10,7 +10,7 @@ format shortG
 rootDir = '/Volumes/240/lwx/';
 
 % Get bl project foldername.
-blprojectid = 'proj-5a74d1e26ed91402ce400cca';
+blprojectid = 'proj-5e849e65952fef3dcd7a1700';
 
 % Read in behavioral data.
 beh = readtable([rootDir 'supportFiles/LWX_all_groupings.csv'], 'TreatAsEmpty', {'.', 'na'});
@@ -111,7 +111,7 @@ a_color = [0.41176 0.41176 0.41176]; %gray
 gscatter(m, 1:length(m), group, [yc_color; oc_color; a_color], '.', 20)
 hold on;
 gscatter(b0, 1:length(b0), group, [yc_color; oc_color; a_color], 'x', 8)
-plot([20 20], [0 length(subID)+0.5], ':k')
+plot([15 15], [0 length(subID)+0.5], ':k')
 
 for p = 1:length(m)
     

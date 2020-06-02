@@ -18,14 +18,22 @@ beh = readtable([rootDir 'supportFiles/LWX_all_groupings.csv'], 'TreatAsEmpty', 
 remove_outliers = 'yes';
 if strcmp(remove_outliers, 'yes')
     
-    % Identify outliers to be removed.
-    %     outlier = [108 126 318];%
+    % Identify outliers to be removed - conservative removal.
+%         outlier = [108 126 212 214 318];
     % 108, snr is below 2 SD of group mean
     % 126, dwi image has major distortions, visual inspection
+    % 212, physical anomaly that precludes tracking of vertical tracks, visual inspection
+    % 214, major motion artifacts, visual inspection
     % 318, snr is below 2 SD of group mean and dwi image has major distortions, visual inspection
     
-    % Full set of outliers, including images removed based on visual inspection alone, being conservative to keep only the best data.
-    outlier = [108 116 125 126 203 206 212 214 315 316 318];
+    % Identify outliers to be removed - liberal removal.
+    outlier = [108 116 119 125 126 206 212 214 303 317 318];
+    % 116, FD > 2
+    % 119, FD > 2
+    % 125, FD > 2
+    % 206, FD > 2 
+    % 303, SNR < 15 
+    % 317, FD > 2
     
 end
 
@@ -201,8 +209,8 @@ a.YLabel.String = 'Mean Framewise Displacement (FD)';
 a.YLabel.FontSize = fontsize;
 pbaspect([1 1 1])
 
-print(fullfile(rootDir, 'plots', 'plot_barplot_motion'), '-dpng')
-print(fullfile(rootDir, 'plots', 'eps', 'plot_barplot_motion'), '-depsc')
+print(fullfile(rootDir, 'plots', 'plot_barplot_fd'), '-dpng')
+print(fullfile(rootDir, 'plots', 'eps', 'plot_barplot_fd'), '-depsc')
 
 hold off;
 
