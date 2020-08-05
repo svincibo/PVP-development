@@ -80,7 +80,7 @@ for s = 1:size(grp_contents, 1)
             subID(sub_count) = str2num(grp_contents(s).name(5:7));
             
             % Get ylabel.
-            lab{sub_count} = grp_contents(s).name;
+            lab{sub_count} = grp_contents(s).name(5:end);
             
             % Get session.
             age(sub_count) = beh.Age_months(find((beh.SubjectID == str2num(grp_contents(s).name(5:7)))));
@@ -158,7 +158,7 @@ yax = get(gca,'yaxis');
 yax.Limits = [0 length(lab)+0.5];
 yax.TickValues = 1:1:ceil(length(lab));
 yax.TickDirection = 'out';
-yax.TickLabels = lab;
+yax.TickLabels = subID;
 yax.FontName = fontname;
 yax.FontSize = 8;
 plot([2 2], [0 length(subID)+0.5], ':k')
@@ -175,6 +175,6 @@ a.XLabel.String = 'Framewise Displacement (FD)';
 a.XLabel.FontSize = fontsize;
 pbaspect([1 1 1])
 
-print(fullfile(rootDir, 'plots', 'plot_fd'), '-dpng')
+print(fullfile(rootDir, 'plots-singleshell', 'plot_fd'), '-dpng')
 
 hold off;

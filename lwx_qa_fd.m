@@ -19,15 +19,14 @@ remove_outliers = 'yes';
 if strcmp(remove_outliers, 'yes')
     
     % Identify outliers to be removed - conservative removal.
-%         outlier = [108 126 212 214 318];
+%         outlier = [108 126 214 318];
     % 108, snr is below 2 SD of group mean
     % 126, dwi image has major distortions, visual inspection
-    % 212, physical anomaly that precludes tracking of vertical tracks, visual inspection
     % 214, major motion artifacts, visual inspection
     % 318, snr is below 2 SD of group mean and dwi image has major distortions, visual inspection
     
     % Identify outliers to be removed - liberal removal.
-    outlier = [108 116 119 125 126 206 212 214 303 317 318];
+    outlier = [108 116 119 125 126 206 214 303 317 318];
     % 116, FD > 2
     % 119, FD > 2
     % 125, FD > 2

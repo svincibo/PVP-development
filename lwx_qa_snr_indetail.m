@@ -162,6 +162,6 @@ a.XLabel.String = 'SNR';
 a.XLabel.FontSize = fontsize;
 pbaspect([1 1 1])
 
-print(fullfile(rootDir, 'plots', 'plot_snr'), '-dpng')
+print(fullfile(rootDir, 'plots-singleshell', 'plot_snr'), '-dpng')
 
 hold off;

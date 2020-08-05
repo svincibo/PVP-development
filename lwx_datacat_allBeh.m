@@ -10,7 +10,7 @@
 clear all; close all; clc
 format shortG
 
-w_measures = {'fa', 'md'};
+w_measures = {'fa'};%, 'md'};
 
 fontname = 'Arial';
 fontsizex = 16; fontsizey = 12;
@@ -183,7 +183,8 @@ for w = 1:length(w_measures)
     
     % Create grouping and behavioral vectors.
     beh_out = cat(2, beh.SubjectID, beh.group_age, beh.Age_months, beh.group_lit, beh.c_lit, ...
-        beh.group_vm, beh.c_vm, beh.group_fm, beh.c_fm, beh.Sex);
+        beh.group_vm, beh.c_vm, beh.group_fm, beh.c_fm, beh.Sex, beh.rBeeryVMI, beh.rBeeryVP, beh.rBeeryMC, beh.rgPegs_dom_forward, beh.rgPegs_nondom_forward, ...
+        beh.rWJIV_LetterWordIdentification, beh.rWJIV_Spelling, beh.rWJIV_WordAttack, beh.rWJIV_SpellingOfSounds);
     
     % Determine which subIDs appear in both WM and BEH.
     sub_wm_beh = intersect(wm_measures(:, find(strcmp(wm_header, 'subID'))), beh.SubjectID);
@@ -197,7 +198,8 @@ for w = 1:length(w_measures)
     % Remove redundant subID columns.
     data_all = cat(2, beh_out(sub_idx_beh, :), wm_measures(sub_idx_wm, find(strcmp(wm_header, 'subID'))+1:end));    
     data_all_header = [{'subID',  'gp_age', 'cov_age', 'gp_lit', 'c_lit', 'gp_vm', 'c_vm', ...
-        'gp_fm', 'c_fm', 'cov_sex'}, wm_header{find(strcmp(wm_header, 'subID'))+1:end}];
+        'gp_fm', 'c_fm', 'cov_sex', 'BeeryVMI', 'BeeryVP', 'BeeryMC', 'gPegs_dom_forward', 'gPegs_nondom_forward', ...
+        'WJIV_LetterWordIdentification', 'WJIV_Spelling', 'WJIV_WordAttack', 'WJIV_SpellingOfSounds'}, wm_header{find(strcmp(wm_header, 'subID'))+1:end}];
     
     % Remove outliers.
     if strcmp(remove_outliers, 'yes') && exist('outlier')

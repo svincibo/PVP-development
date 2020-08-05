@@ -26,15 +26,14 @@ remove_outliers = 'yes';
 if strcmp(remove_outliers, 'yes')
     
     % Identify outliers to be removed - conservative removal.
-%         outlier = [108 126 212 214 318];
+%         outlier = [108 126 214 318];
     % 108, snr is below 2 SD of group mean
     % 126, dwi image has major distortions, visual inspection
-    % 212, physical anomaly that precludes tracking of vertical tracks, visual inspection
     % 214, major motion artifacts, visual inspection
     % 318, snr is below 2 SD of group mean and dwi image has major distortions, visual inspection
     
     % Identify outliers to be removed - liberal removal.
-    outlier = [108 116 119 125 126 206 212 214 303 317 318];
+    outlier = [108 116 119 125 126 127 128 206 214 303 317 318];
     % 116, FD > 2
     % 119, FD > 2
     % 125, FD > 2
@@ -128,7 +127,7 @@ end
 
 % Write out table for anova.
 t_out = array2table(cat(2, subID', group', m', b0'), 'VariableNames', {'subID', 'group', 'm', 'b0'});
-writetable(t_out, fullfile(rootDir, 'supportFiles', 'lwx_data_snr_indetail.csv'));
+writetable(t_out, fullfile(rootDir, 'supportFiles', 'lwx_data_snr_singleshell.csv'));
 
 % Group differences test
 disp('Are there b0 SNR differences among groups?')
@@ -235,8 +234,8 @@ a.YLabel.String = 'SNR, b0 volumes';
 a.YLabel.FontSize = fontsize;
 pbaspect([1 1 1])
 
-print(fullfile(rootDir, 'plots', 'plot_barplot_snr_b0_bygroup'), '-dpng')
-print(fullfile(rootDir, 'plots', 'eps', 'plot_barplot_snr_b0_bygroup'), '-depsc')
+print(fullfile(rootDir, 'plots-singleshell', ['plot_barplot_snr_b0_bygroup_outliers' remove_outliers]), '-dpng')
+print(fullfile(rootDir, 'plots-singleshell', 'eps', ['plot_barplot_snr_b0_bygroup_outliers' remove_outliers]), '-depsc')
 
 hold off;
 clear snr
@@ -289,8 +288,7 @@ a.YLabel.String = 'SNR, weighted volumes';
 a.YLabel.FontSize = fontsize;
 pbaspect([1 1 1])
 
-print(fullfile(rootDir, 'plots', 'plot_barplot_snr_weighted_bygroup'), '-dpng')
-print(fullfile(rootDir, 'plots', 'eps', 'plot_barplot_snr_weighted_bygroup'), '-depsc')
+print(fullfile(rootDir, 'plots-singleshell', ['plot_barplot_snr_weighted_bygroup_outliers' remove_outliers]), '-dpng')
+print(fullfile(rootDir, 'plots-singleshell', 'eps', ['plot_barplot_snr_weighted_bygroup_outliers' remove_outliers]), '-depsc')
 
 hold off;
-
