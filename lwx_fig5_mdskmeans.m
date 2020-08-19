@@ -7,7 +7,7 @@ group = 'adults'; % adults, children
 
 hemisphere = 'both2'; % left, right, both, both2
 
-n_clust = 3; % for kmeans, set n_clust = 3 for the separation of pathways hypothesis, set n_clust = 2 for the VTP closer to VH than DH hypothesis
+n_clust = 2; % for kmeans, set n_clust = 3 for the separation of pathways hypothesis, set n_clust = 2 for the VTP closer to VH than DH hypothesis
 n_rep = 10000; % for kmeans, number of clustering steps taken; chooses best based on total sum of distances between points and cluster centroids
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -200,202 +200,202 @@ marker = 'o';
 markersize = 16;
 lolimit = -0.50; hilimit = 0.77;
 
-%ventral
+% ventral
 v_idx = find(strcmp(tractnames, 'ilf') | strcmp(tractnames, 'ifof'));
-%vertical
+% vertical
 vp_idx = find(strcmp(tractnames, 'pArc') | strcmp(tractnames, 'tpc') | strcmp(tractnames, 'mdlfspl') | strcmp(tractnames, 'mdlfang'));
-%dorsal
+% dorsal
 d_idx = find(strcmp(tractnames, 'slf12') | strcmp(tractnames, 'slf3'));
 
-% figure(1)
-% hold on;
-% 
-% p = plot3(Y(v_idx, 1), Y(v_idx, 2), Y(v_idx, 3), Y(vp_idx, 1), Y(vp_idx, 2), Y(vp_idx, 3), Y(d_idx, 1), Y(d_idx, 2), Y(d_idx, 3));
-% p(1).LineStyle = linestyle;
-% p(1).Marker = marker;
-% p(1).MarkerSize = markersize;
-% p(1).MarkerFaceColor = ventralcolor;
-% p(1).MarkerEdgeColor = ventralcolor;
-% 
-% p(2).LineStyle = linestyle;
-% p(2).Marker = marker;
-% p(2).MarkerSize = markersize;
-% p(2).MarkerFaceColor = verticalcolor;
-% p(2).MarkerEdgeColor = verticalcolor;
-% 
-% p(3).LineStyle = linestyle;
-% p(3).Marker = marker;
-% p(3).MarkerSize = markersize;
-% p(3).MarkerFaceColor = dorsalcolor;
-% p(3).MarkerEdgeColor = dorsalcolor;
-% 
-% tractnames = {'SLF12', 'SLF3', 'MDLFang', 'MDLFspl', 'TPC', 'pArc', 'ILF', 'IFOF'};
-% t = text(Y(:,1)-.05,Y(:,2),Y(:,3)-.08,tractnames, 'Color', 'k', 'FontSize', 16);
-% t(1).Color = dorsalcolor; t(2).Color = dorsalcolor;
-% t(3).Color = verticalcolor; t(4).Color = verticalcolor; t(5).Color = verticalcolor; t(6).Color = verticalcolor;
-% t(7).Color = ventralcolor; t(8).Color = ventralcolor;
-% 
-% axis equal;
-% box off;
-% view(-20, -5);
-% 
-% xlimhi = hilimit; xlimlo = lolimit;
-% xax = get(gca, 'xaxis');
-% xax.Limits = [xlimlo xlimhi];
-% xax.TickValues = [xlimlo ((xlimlo+xlimhi)/2)+(xlimlo/2) (xlimlo+xlimhi)/2 ((xlimlo+xlimhi)/2)+(xlimhi/2) xlimhi];
-% xax.TickDirection = 'out';
-% xax.TickLabels = {num2str(xlimlo, '%2.2f'), '', num2str((xlimlo+xlimhi)/2, '%2.2f'), '', num2str(xlimhi, '%2.2f')};
-% xax.FontAngle = fontangle;
-% xax.FontSize = fontsizex;
-% labstr = {['First Dimension,\ e = ' num2str(eigvals(1), '%2.3f')]};
-% labstr = cellfun(@(x) strrep(x, '\', '\newline'), labstr, 'UniformOutput', false);
-% xax.Label.String = labstr;
-% xax.Label.FontAngle = fontangle;
-% xax.Label.FontName = fontname;
-% xax.Label.FontSize = fontsizex;
-% 
-% % yaxis
-% ylimhi = hilimit; ylimlo = lolimit;
-% yax = get(gca,'yaxis');
-% yax.Limits = [ylimlo ylimhi];
-% yax.TickValues = [ylimlo ((ylimlo+ylimhi)/2)+(ylimlo/2) (ylimlo+ylimhi)/2 ((ylimlo+ylimhi)/2)+(ylimhi/2) ylimhi];
-% yax.TickDirection = 'out';
-% yax.TickLabels = {num2str(ylimlo, '%2.2f'), '', num2str((ylimlo+ylimhi)/2, '%2.2f'), '', num2str(ylimhi, '%2.2f')};
-% yax.TickDirection = 'out';
-% yax.TickLength = [yticklength yticklength];
-% yax.FontSize = fontsizey;
-% labstr = {['Second Dimension,\ e = ' num2str(eigvals(2), '%2.3f')]};
-% labstr = cellfun(@(x) strrep(x, '\', '\newline'), labstr, 'UniformOutput', false);
-% yax.Label.String = labstr;
-% yax.Label.FontName = fontname;
-% yax.Label.FontSize = fontsizey;
-% 
-% % zaxis
-% zlimhi = hilimit; zlimlo = lolimit;
-% zax = get(gca,'zaxis');
-% zax.Limits = [zlimlo zlimhi];
-% zax.TickValues = [zlimlo ((zlimlo+zlimhi)/2)+(zlimlo/2) (zlimlo+zlimhi)/2 ((zlimlo+zlimhi)/2)+(zlimhi/2) zlimhi];
-% zax.TickDirection = 'out';
-% zax.TickLabels = {num2str(zlimlo, '%2.2f'), '', num2str((zlimlo+zlimhi)/2, '%2.2f'), '', num2str(zlimhi, '%2.2f')};
-% zax.TickDirection = 'out';
-% zax.TickLength = [zticklength zticklength];
-% zax.FontSize = fontsizez;
-% labstr = {['Third Dimension,\ e = ' num2str(eigvals(3), '%2.3f')]};
-% labstr = cellfun(@(x) strrep(x, '\', '\newline'), labstr, 'UniformOutput', false);
-% zax.Label.String = labstr;
-% zax.Label.FontName = fontname;
-% zax.Label.FontSize = fontsizez;
-% 
-% % Write.
-% print(fullfile(rootDir, 'plots-singleshell', ['plot_fa_singleshell_' hemisphere '_' group '_mds_3D']), '-dpng')
-% print(fullfile(rootDir, 'plots-singleshell', 'eps', ['plot_fa_singleshell_' hemisphere '_' group '_mds_3D']), '-depsc')
-% 
-% figure(2)
-% hold on;
-% limits = 0.50;
-% 
-% plot(Y(v_idx, 1), Y(v_idx, 2), 'LineStyle', linestyle, 'Marker', marker, 'MarkerSize', markersize, ...
-%     'MarkerFaceColor', ventralcolor, 'MarkerEdgeColor', ventralcolor);
-% plot(Y(vp_idx, 1), Y(vp_idx, 2), 'LineStyle', linestyle, 'Marker', marker, 'MarkerSize', markersize, ...
-%     'MarkerFaceColor', verticalcolor, 'MarkerEdgeColor', verticalcolor);
-% plot(Y(d_idx, 1), Y(d_idx, 2), 'LineStyle', linestyle, 'Marker', marker, 'MarkerSize', markersize, ...
-%     'MarkerFaceColor', dorsalcolor, 'MarkerEdgeColor', dorsalcolor);
-% 
-% tractnames = {'SLF12', 'SLF3', 'MDLFang', 'MDLFspl', 'TPC', 'pArc', 'ILF', 'IFOF'};
-% t = text(Y(:,1)-0.05, Y(:,2)+0.08, tractnames, 'Color', 'k', 'FontSize', 16);
-% t(1).Color = dorsalcolor; t(2).Color = dorsalcolor;
-% t(3).Color = verticalcolor; t(4).Color = verticalcolor; t(5).Color = verticalcolor; t(6).Color = verticalcolor;
-% t(7).Color = ventralcolor; t(8).Color = ventralcolor;
-% 
-% xlimhi = 1.1; xlimlo = -limits;
-% xax = get(gca, 'xaxis');
-% xax.Limits = [xlimlo xlimhi];
-% xax.TickValues = [xlimlo ((xlimlo+xlimhi)/2)+(xlimlo/2) (xlimlo+xlimhi)/2 ((xlimlo+xlimhi)/2)+(xlimhi/2) xlimhi];
-% xax.TickDirection = 'out';
-% xax.TickLabels = {num2str(xlimlo, '%2.2f'), '', num2str((xlimlo+xlimhi)/2, '%2.2f'), '', num2str(xlimhi, '%2.2f')};
-% xax.FontAngle = fontangle;
-% xax.FontSize = fontsizex;
-% labstr = {['First Dimension,\ e = ' num2str(eigvals(1), '%2.3f')]};
-% labstr = cellfun(@(x) strrep(x, '\', '\newline'), labstr, 'UniformOutput', false);
-% xax.Label.String = labstr;
-% yax.Label.FontAngle = fontangle;
-% xax.Label.FontName = fontname;
-% xax.Label.FontSize = fontsizex;
-% 
-% % yaxis
-% ylimhi = 0.7; ylimlo = -limits;
-% yax = get(gca,'yaxis');
-% yax.Limits = [ylimlo ylimhi];
-% yax.TickValues = [ylimlo ((ylimlo+ylimhi)/2)+(ylimlo/2) (ylimlo+ylimhi)/2 ((ylimlo+ylimhi)/2)+(ylimhi/2) ylimhi];
-% yax.TickDirection = 'out';
-% yax.TickLabels = {num2str(ylimlo, '%2.2f'), '', num2str((ylimlo+ylimhi)/2, '%2.2f'), '', num2str(ylimhi, '%2.2f')};
-% yax.TickDirection = 'out';
-% yax.TickLength = [yticklength yticklength];
-% yax.FontSize = fontsizey;
-% labstr = {['Second Dimension,\ e = ' num2str(eigvals(2), '%2.3f')]};
-% labstr = cellfun(@(x) strrep(x, '\', '\newline'), labstr, 'UniformOutput', false);
-% yax.Label.String = labstr;
-% yax.Label.FontName = fontname;
-% yax.Label.FontSize = fontsizey;
-% 
-% % zaxis
-% zlimhi = limits; zlimlo = -limits;
-% zax = get(gca,'zaxis');
-% zax.Limits = [zlimlo zlimhi];
-% zax.TickValues = [zlimlo ((zlimlo+zlimhi)/2)+(zlimlo/2) (zlimlo+zlimhi)/2 ((zlimlo+zlimhi)/2)+(zlimhi/2) zlimhi];
-% zax.TickDirection = 'out';
-% zax.TickLabels = {num2str(zlimlo, '%2.2f'), '', num2str((zlimlo+zlimhi)/2, '%2.2f'), '', num2str(zlimhi, '%2.2f')};
-% zax.TickDirection = 'out';
-% zax.TickLength = [zticklength zticklength];
-% zax.FontSize = fontsizez;
-% labstr = {['Third Dimension,\ e = ' num2str(eigvals(3), '%2.3f')]};
-% labstr = cellfun(@(x) strrep(x, '\', '\newline'), labstr, 'UniformOutput', false);
-% zax.Label.String = labstr;
-% zax.Label.FontName = fontname;
-% zax.Label.FontSize = fontsizez;
-% % Write.
-% print(fullfile(rootDir, 'plots-singleshell', ['plot_fa_singleshell_' hemisphere '_' group '_mds_2D']), '-dpng')
-% print(fullfile(rootDir, 'plots-singleshell', 'eps', ['plot_fa_singleshell_' hemisphere '_' group '_mds_2D']), '-depsc')
-% 
-% hold off;
-% 
-% figure(4)
-% bar(eigvals, 'FaceColor', 'k', 'EdgeColor', 'k', 'FaceAlpha', .5, 'EdgeAlpha', .5)
-% xlimhi = 8.5; xlimlo = 0.5;
-% xax = get(gca, 'xaxis');
-% xax.Limits = [xlimlo xlimhi];
-% xax.TickDirection = 'out';
-% xax.FontAngle = fontangle;
-% xax.FontSize = fontsizex;
-% labstr = {'Eigenvalue Number'};
-% labstr = cellfun(@(x) strrep(x, '\', '\newline'), labstr, 'UniformOutput', false);
-% xax.Label.String = labstr;
-% yax.Label.FontAngle = fontangle;
-% xax.Label.FontName = fontname;
-% xax.Label.FontSize = fontsizex;
-% 
-% % yaxis
-% ylimhi = 1.4; ylimlo = 0;
-% yax = get(gca,'yaxis');
-% yax.Limits = [ylimlo ylimhi];
-% yax.TickValues = [ylimlo (ylimlo+ylimhi)/2 ylimhi];
-% yax.TickDirection = 'out';
-% yax.TickLabels = {num2str(ylimlo, '%2.2f'), num2str((ylimlo+ylimhi)/2, '%2.2f'), num2str(ylimhi, '%2.2f')};
-% yax.TickDirection = 'out';
-% yax.TickLength = [yticklength yticklength];
-% yax.FontSize = fontsizey;
-% labstr = {'Normalized Eigenvalue'};
-% labstr = cellfun(@(x) strrep(x, '\', '\newline'), labstr, 'UniformOutput', false);
-% yax.Label.String = labstr;
-% yax.Label.FontName = fontname;
-% yax.Label.FontSize = fontsizey;
-% 
-% box off;
-% 
-% % Write.
-% print(fullfile(rootDir, 'plots-singleshell', ['plot_fa_singleshell_' hemisphere '_' group '_mds_eig']), '-dpng')
-% print(fullfile(rootDir, 'plots-singleshell', 'eps', ['plot_fa_singleshell_' hemisphere '_' group '_mds_eig']), '-depsc')
-% 
+figure(1)
+hold on;
+
+p = plot3(Y(v_idx, 1), Y(v_idx, 2), Y(v_idx, 3), Y(vp_idx, 1), Y(vp_idx, 2), Y(vp_idx, 3), Y(d_idx, 1), Y(d_idx, 2), Y(d_idx, 3));
+p(1).LineStyle = linestyle;
+p(1).Marker = marker;
+p(1).MarkerSize = markersize;
+p(1).MarkerFaceColor = ventralcolor;
+p(1).MarkerEdgeColor = ventralcolor;
+
+p(2).LineStyle = linestyle;
+p(2).Marker = marker;
+p(2).MarkerSize = markersize;
+p(2).MarkerFaceColor = verticalcolor;
+p(2).MarkerEdgeColor = verticalcolor;
+
+p(3).LineStyle = linestyle;
+p(3).Marker = marker;
+p(3).MarkerSize = markersize;
+p(3).MarkerFaceColor = dorsalcolor;
+p(3).MarkerEdgeColor = dorsalcolor;
+
+tractnames = {'SLF12', 'SLF3', 'MDLFang', 'MDLFspl', 'TPC', 'pArc', 'ILF', 'IFOF'};
+t = text(Y(:,1)-.05,Y(:,2),Y(:,3)-.08,tractnames, 'Color', 'k', 'FontSize', 16);
+t(1).Color = dorsalcolor; t(2).Color = dorsalcolor;
+t(3).Color = verticalcolor; t(4).Color = verticalcolor; t(5).Color = verticalcolor; t(6).Color = verticalcolor;
+t(7).Color = ventralcolor; t(8).Color = ventralcolor;
+
+axis equal;
+box off;
+view(-20, -5);
+
+xlimhi = hilimit; xlimlo = lolimit;
+xax = get(gca, 'xaxis');
+xax.Limits = [xlimlo xlimhi];
+xax.TickValues = [xlimlo ((xlimlo+xlimhi)/2)+(xlimlo/2) (xlimlo+xlimhi)/2 ((xlimlo+xlimhi)/2)+(xlimhi/2) xlimhi];
+xax.TickDirection = 'out';
+xax.TickLabels = {num2str(xlimlo, '%2.2f'), '', num2str((xlimlo+xlimhi)/2, '%2.2f'), '', num2str(xlimhi, '%2.2f')};
+xax.FontAngle = fontangle;
+xax.FontSize = fontsizex;
+labstr = {['First Dimension,\ e = ' num2str(eigvals(1), '%2.3f')]};
+labstr = cellfun(@(x) strrep(x, '\', '\newline'), labstr, 'UniformOutput', false);
+xax.Label.String = labstr;
+xax.Label.FontAngle = fontangle;
+xax.Label.FontName = fontname;
+xax.Label.FontSize = fontsizex;
+
+% yaxis
+ylimhi = hilimit; ylimlo = lolimit;
+yax = get(gca,'yaxis');
+yax.Limits = [ylimlo ylimhi];
+yax.TickValues = [ylimlo ((ylimlo+ylimhi)/2)+(ylimlo/2) (ylimlo+ylimhi)/2 ((ylimlo+ylimhi)/2)+(ylimhi/2) ylimhi];
+yax.TickDirection = 'out';
+yax.TickLabels = {num2str(ylimlo, '%2.2f'), '', num2str((ylimlo+ylimhi)/2, '%2.2f'), '', num2str(ylimhi, '%2.2f')};
+yax.TickDirection = 'out';
+yax.TickLength = [yticklength yticklength];
+yax.FontSize = fontsizey;
+labstr = {['Second Dimension,\ e = ' num2str(eigvals(2), '%2.3f')]};
+labstr = cellfun(@(x) strrep(x, '\', '\newline'), labstr, 'UniformOutput', false);
+yax.Label.String = labstr;
+yax.Label.FontName = fontname;
+yax.Label.FontSize = fontsizey;
+
+% zaxis
+zlimhi = hilimit; zlimlo = lolimit;
+zax = get(gca,'zaxis');
+zax.Limits = [zlimlo zlimhi];
+zax.TickValues = [zlimlo ((zlimlo+zlimhi)/2)+(zlimlo/2) (zlimlo+zlimhi)/2 ((zlimlo+zlimhi)/2)+(zlimhi/2) zlimhi];
+zax.TickDirection = 'out';
+zax.TickLabels = {num2str(zlimlo, '%2.2f'), '', num2str((zlimlo+zlimhi)/2, '%2.2f'), '', num2str(zlimhi, '%2.2f')};
+zax.TickDirection = 'out';
+zax.TickLength = [zticklength zticklength];
+zax.FontSize = fontsizez;
+labstr = {['Third Dimension,\ e = ' num2str(eigvals(3), '%2.3f')]};
+labstr = cellfun(@(x) strrep(x, '\', '\newline'), labstr, 'UniformOutput', false);
+zax.Label.String = labstr;
+zax.Label.FontName = fontname;
+zax.Label.FontSize = fontsizez;
+
+% Write.
+print(fullfile(rootDir, 'plots-singleshell', ['plot_fa_singleshell_' hemisphere '_' group '_mds_3D']), '-dpng')
+print(fullfile(rootDir, 'plots-singleshell', 'eps', ['plot_fa_singleshell_' hemisphere '_' group '_mds_3D']), '-depsc')
+
+figure(2)
+hold on;
+limits = 0.50;
+
+plot(Y(v_idx, 1), Y(v_idx, 2), 'LineStyle', linestyle, 'Marker', marker, 'MarkerSize', markersize, ...
+    'MarkerFaceColor', ventralcolor, 'MarkerEdgeColor', ventralcolor);
+plot(Y(vp_idx, 1), Y(vp_idx, 2), 'LineStyle', linestyle, 'Marker', marker, 'MarkerSize', markersize, ...
+    'MarkerFaceColor', verticalcolor, 'MarkerEdgeColor', verticalcolor);
+plot(Y(d_idx, 1), Y(d_idx, 2), 'LineStyle', linestyle, 'Marker', marker, 'MarkerSize', markersize, ...
+    'MarkerFaceColor', dorsalcolor, 'MarkerEdgeColor', dorsalcolor);
+
+tractnames = {'SLF12', 'SLF3', 'MDLFang', 'MDLFspl', 'TPC', 'pArc', 'ILF', 'IFOF'};
+t = text(Y(:,1)-0.05, Y(:,2)+0.08, tractnames, 'Color', 'k', 'FontSize', 16);
+t(1).Color = dorsalcolor; t(2).Color = dorsalcolor;
+t(3).Color = verticalcolor; t(4).Color = verticalcolor; t(5).Color = verticalcolor; t(6).Color = verticalcolor;
+t(7).Color = ventralcolor; t(8).Color = ventralcolor;
+
+xlimhi = 1.1; xlimlo = -limits;
+xax = get(gca, 'xaxis');
+xax.Limits = [xlimlo xlimhi];
+xax.TickValues = [xlimlo ((xlimlo+xlimhi)/2)+(xlimlo/2) (xlimlo+xlimhi)/2 ((xlimlo+xlimhi)/2)+(xlimhi/2) xlimhi];
+xax.TickDirection = 'out';
+xax.TickLabels = {num2str(xlimlo, '%2.2f'), '', num2str((xlimlo+xlimhi)/2, '%2.2f'), '', num2str(xlimhi, '%2.2f')};
+xax.FontAngle = fontangle;
+xax.FontSize = fontsizex;
+labstr = {['First Dimension,\ e = ' num2str(eigvals(1), '%2.3f')]};
+labstr = cellfun(@(x) strrep(x, '\', '\newline'), labstr, 'UniformOutput', false);
+xax.Label.String = labstr;
+yax.Label.FontAngle = fontangle;
+xax.Label.FontName = fontname;
+xax.Label.FontSize = fontsizex;
+
+% yaxis
+ylimhi = 0.7; ylimlo = -limits;
+yax = get(gca,'yaxis');
+yax.Limits = [ylimlo ylimhi];
+yax.TickValues = [ylimlo ((ylimlo+ylimhi)/2)+(ylimlo/2) (ylimlo+ylimhi)/2 ((ylimlo+ylimhi)/2)+(ylimhi/2) ylimhi];
+yax.TickDirection = 'out';
+yax.TickLabels = {num2str(ylimlo, '%2.2f'), '', num2str((ylimlo+ylimhi)/2, '%2.2f'), '', num2str(ylimhi, '%2.2f')};
+yax.TickDirection = 'out';
+yax.TickLength = [yticklength yticklength];
+yax.FontSize = fontsizey;
+labstr = {['Second Dimension,\ e = ' num2str(eigvals(2), '%2.3f')]};
+labstr = cellfun(@(x) strrep(x, '\', '\newline'), labstr, 'UniformOutput', false);
+yax.Label.String = labstr;
+yax.Label.FontName = fontname;
+yax.Label.FontSize = fontsizey;
+
+% zaxis
+zlimhi = limits; zlimlo = -limits;
+zax = get(gca,'zaxis');
+zax.Limits = [zlimlo zlimhi];
+zax.TickValues = [zlimlo ((zlimlo+zlimhi)/2)+(zlimlo/2) (zlimlo+zlimhi)/2 ((zlimlo+zlimhi)/2)+(zlimhi/2) zlimhi];
+zax.TickDirection = 'out';
+zax.TickLabels = {num2str(zlimlo, '%2.2f'), '', num2str((zlimlo+zlimhi)/2, '%2.2f'), '', num2str(zlimhi, '%2.2f')};
+zax.TickDirection = 'out';
+zax.TickLength = [zticklength zticklength];
+zax.FontSize = fontsizez;
+labstr = {['Third Dimension,\ e = ' num2str(eigvals(3), '%2.3f')]};
+labstr = cellfun(@(x) strrep(x, '\', '\newline'), labstr, 'UniformOutput', false);
+zax.Label.String = labstr;
+zax.Label.FontName = fontname;
+zax.Label.FontSize = fontsizez;
+% Write.
+print(fullfile(rootDir, 'plots-singleshell', ['plot_fa_singleshell_' hemisphere '_' group '_mds_2D']), '-dpng')
+print(fullfile(rootDir, 'plots-singleshell', 'eps', ['plot_fa_singleshell_' hemisphere '_' group '_mds_2D']), '-depsc')
+
+hold off;
+
+figure(4)
+bar(eigvals, 'FaceColor', 'k', 'EdgeColor', 'k', 'FaceAlpha', .5, 'EdgeAlpha', .5)
+xlimhi = 8.5; xlimlo = 0.5;
+xax = get(gca, 'xaxis');
+xax.Limits = [xlimlo xlimhi];
+xax.TickDirection = 'out';
+xax.FontAngle = fontangle;
+xax.FontSize = fontsizex;
+labstr = {'Eigenvalue Number'};
+labstr = cellfun(@(x) strrep(x, '\', '\newline'), labstr, 'UniformOutput', false);
+xax.Label.String = labstr;
+yax.Label.FontAngle = fontangle;
+xax.Label.FontName = fontname;
+xax.Label.FontSize = fontsizex;
+
+% yaxis
+ylimhi = 1.4; ylimlo = 0;
+yax = get(gca,'yaxis');
+yax.Limits = [ylimlo ylimhi];
+yax.TickValues = [ylimlo (ylimlo+ylimhi)/2 ylimhi];
+yax.TickDirection = 'out';
+yax.TickLabels = {num2str(ylimlo, '%2.2f'), num2str((ylimlo+ylimhi)/2, '%2.2f'), num2str(ylimhi, '%2.2f')};
+yax.TickDirection = 'out';
+yax.TickLength = [yticklength yticklength];
+yax.FontSize = fontsizey;
+labstr = {'Normalized Eigenvalue'};
+labstr = cellfun(@(x) strrep(x, '\', '\newline'), labstr, 'UniformOutput', false);
+yax.Label.String = labstr;
+yax.Label.FontName = fontname;
+yax.Label.FontSize = fontsizey;
+
+box off;
+
+% Write.
+print(fullfile(rootDir, 'plots-singleshell', ['plot_fa_singleshell_' hemisphere '_' group '_mds_eig']), '-dpng')
+print(fullfile(rootDir, 'plots-singleshell', 'eps', ['plot_fa_singleshell_' hemisphere '_' group '_mds_eig']), '-depsc')
+
 %% kmeans clustering
 
 % The first two eigenvalues explain the majority of the variance in the data, so we will apply kmeans clustering to the two vectors predicted by
@@ -428,7 +428,7 @@ end
 
 figure(5);
 hold on;
-markersize = 11; 
+markersize = 20; 
 if n_clust == 3
     
     % Add grid.
