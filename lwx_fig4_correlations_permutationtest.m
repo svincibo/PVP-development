@@ -74,18 +74,19 @@ null_dis = [vv_child(:); vd_child(:); vv_adult(:); vd_adult(:)];
 for i = 1:10000
     
     % Randomly select a permutation with replacement.
-    this_vv_child = randsample(null_dis, size(vv_child, 1), true);
+    this_vv_child = randsample(null_dis, size(vv_child), true);
     
     % Randomly select a permutation with replacement.
-    this_vd_child = randsample(null_dis, size(vd_child, 1), true);
+    this_vd_child = randsample(null_dis, size(vd_child), true);
     
     % Randomly select a permutation with replacement.
-    this_vv_adult = randsample(null_dis, size(vv_adult, 1), true);
+    this_vv_adult = randsample(null_dis, size(vv_adult), true);
     
     % Randomly select a permutation with replacement.
-    this_vd_adult = randsample(null_dis, size(vd_adult, 1), true);
+    this_vd_adult = randsample(null_dis, size(vd_adult), true);
     
     % Get the correlation at that location.
+  %  interaction_null = nans(size(this_vv_child))
     interaction_null(i) = mean(this_vv_child) - mean(this_vd_child) - (mean(this_vv_adult) - mean(this_vd_adult));
     
     clear this_vv this_vd
@@ -97,8 +98,16 @@ sigma_interaction_null=nanstd(interaction_null);
 % Test for significance.
 z = (mu_interaction - mu_interaction_null)./sigma_interaction_null;
 p = 1-normcdf(abs(z), 0, 1);
-
 disp(['z = ' num2str(z) ', p = ' num2str(p)]);
+
+% Another way to do the test
+p=0.01;
+Y = prctile(interaction_null,p);
+if abs(mu_interaction) > abs(Y)
+   fprintf('Significant at %d', p)
+else
+   fprintf('NOT Significant at %d', p)
+end
 
 disp(['mean vv child = ' num2str(mean(vv_child, 'all')) ', mean vd child = ' num2str(mean(vd_child, 'all'))]);
 disp(['mean vv adult = ' num2str(mean(vv_adult, 'all')) ', mean vd adult = ' num2str(mean(vd_adult, 'all'))]);
