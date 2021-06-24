@@ -225,7 +225,7 @@ for w = 1:length(w_measures)
                             c_count = c_count + 1;
                             
                             % Young child.
-                            plot(t_temp, 'LineStyle', '-', 'Color', [c_color .2])
+                            plot(t_temp, 'LineWidth', 2, 'LineStyle', '-', 'Color', [c_color .2])
                             
                             % Collect.
                             c(:, c_count) = t_temp;                           
@@ -235,7 +235,7 @@ for w = 1:length(w_measures)
                             a_count = a_count + 1;
                             
                             % Adult.
-                            plot(t_temp, 'LineStyle', '-', 'Color', [a_color .2])
+                            plot(t_temp, 'LineWidth', 2, 'LineStyle', '-', 'Color', [a_color .2])
                             
                             % Collect.
                             a(:, a_count) = t_temp;
@@ -259,12 +259,12 @@ for w = 1:length(w_measures)
             
             % Plot means and 95% confidence intervals (calculated from
             % standard error: 1.96*SE). Use nanmean/nanstd because one oc subject is missing TPC.
-            plot(nanmean(c, 2), 'LineWidth', 3, 'LineStyle', '-', 'Color', c_color(1:3))
+            plot(nanmean(c, 2), 'LineWidth', 4, 'LineStyle', '-', 'Color', c_color(1:3))
             hi = nanmean(c, 2) + 1.96*nanstd(c, 0, 2)/sqrt(size(~isnan(c), 2)); lo = nanmean(c, 2) - 1.96*nanstd(c, 0, 2)/sqrt(size(~isnan(c), 2)); x = (1:size(nanmean(c, 2),1))';
             hp1 = patch([x; x(end:-1:1); x(1)], [lo; hi(end:-1:1); lo(1)], c_color(1:3));
             set(hp1, 'facecolor', c_color(1:3), 'edgecolor', 'none', 'facealpha', .2);
             
-            plot(nanmean(a, 2), 'LineWidth', 3, 'LineStyle', '-', 'Color', a_color(1:3))
+            plot(nanmean(a, 2), 'LineWidth', 4, 'LineStyle', '-', 'Color', a_color(1:3))
             hi = nanmean(a, 2) + 1.96*nanstd(a, 0, 2)/sqrt(size(~isnan(a), 2)); lo = nanmean(a, 2) - 1.96*nanstd(a, 0, 2)/sqrt(size(~isnan(a), 2)); x = (1:size(nanmean(a, 2),1))';
             hp3 = patch([x; x(end:-1:1); x(1)], [lo; hi(end:-1:1); lo(1)], a_color(1:3));
             set(hp3, 'facecolor', a_color(1:3), 'edgecolor', 'none', 'facealpha', .2);
