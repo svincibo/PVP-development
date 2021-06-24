@@ -26,7 +26,7 @@ if strcmp(remove_outliers, 'yes')
     % 318, snr is below 2 SD of group mean and dwi image has major distortions, visual inspection
     
     % Identify outliers to be removed - liberal removal.
-    outlier = [108 116 119 125 126 206 214 303 317 318];
+    outlier = [108 116 125 126 203 206 212 214 315 316 318];
     % 116, FD > 2
     % 119, FD > 2
     % 125, FD > 2
@@ -40,9 +40,8 @@ else
     
 end
 
-yc_color = [0.6350 0.0780 0.1840]; %red
-oc_color = [0 0.4470 0.7410]; %blue
-a_color = [0.41176 0.41176 0.41176]; %gray
+a_color = [0 0 0]; %[75 75 75]/255; % gray [.146 0 0]; % light black
+c_color = [204 0 204]/255; %pink [178 34 34]/255; % firebrick red [0 .73 .73]; % turquoise
 
 % Read in behavioral data.
 beh_data_in_tbl = readtable([rootDir 'supportFiles/LWX_all_groupings.csv'], 'TreatAsEmpty', {'.', 'na'});
@@ -140,6 +139,10 @@ for t = 1:size(grp_contents, 1)
     
 end % end t
 
+% Fix group so that it is just children and adult.
+group(find(group == 2)) = 1; % change older children to "children = 1""
+group(find(group == 3)) = 2; % then change adults to "adults = 2"
+
 % Find empty cells.
 idx = find(cellfun(@isempty,tract));
 
@@ -203,23 +206,22 @@ end % end tn
 
 % Convert into shorter format.
 figure(1)
-boxplot(d(group == 1, :), 'colors', yc_color, 'Labels', list_tract, 'PlotStyle', 'compact', 'Widths', 1, 'Orientation', 'horizontal')
+boxplot(d(group == 1, :), 'colors', c_color, 'Labels', list_tract, 'PlotStyle', 'compact', 'Widths', 1, 'Orientation', 'horizontal')
 hold on
-boxplot(d(group == 2, :), 'colors', oc_color, 'Labels', list_tract, 'PlotStyle', 'compact', 'Widths', 1, 'Orientation', 'horizontal')
-boxplot(d(group == 3, :), 'colors', a_color, 'Labels', list_tract, 'PlotStyle', 'compact', 'Widths', 1, 'Orientation', 'horizontal')
+boxplot(d(group == 2, :), 'colors', a_color, 'Labels', list_tract, 'PlotStyle', 'compact', 'Widths', 1, 'Orientation', 'horizontal')
 xtickangle(90)
 ylabel('Track Name')
 xlabel('Streamline Count')
 set(gca, 'XScale', 'log')
 xlim([1 100000])
-legend({'Younger Children', 'Older Children', 'Adults'}, 'Location', 'northwest')
+legend({'Children', 'Adults'}, 'Location', 'northwest')
 legend box off
 box off
 print(fullfile(rootDir, 'plots-singleshell', 'plot_singleshell_boxplot_streamlinecount_allgroups'), '-dpng')
 print(fullfile(rootDir, 'plots-singleshell', 'eps', 'plot_singleshell_boxplot_streamlinecount_allgroups'), '-depsc')
 
 figure(2)
-boxplot(d(group == 1, :), 'colors', yc_color, 'Labels', list_tract, 'PlotStyle', 'compact', 'Widths', 1, 'Orientation', 'horizontal')
+boxplot(d(group == 1, :), 'colors', c_color, 'Labels', list_tract, 'PlotStyle', 'compact', 'Widths', 1, 'Orientation', 'horizontal')
 xtickangle(90)
 ylabel('Track Name')
 xlabel('Streamline Count')
@@ -227,23 +229,11 @@ set(gca, 'XScale', 'log')
 xlim([1 100000])
 title('Younger Children')
 box off
-print(fullfile(rootDir, 'plots-singleshell', 'plot_singleshell_boxplot_streamlinecount_yc'), '-dpng')
-print(fullfile(rootDir, 'plots-singleshell', 'eps', 'plot_singleshell_boxplot_streamlinecount_yc'), '-depsc')
+print(fullfile(rootDir, 'plots-singleshell', 'plot_singleshell_boxplot_streamlinecount_c'), '-dpng')
+print(fullfile(rootDir, 'plots-singleshell', 'eps', 'plot_singleshell_boxplot_streamlinecount_c'), '-depsc')
 
 figure(3)
-boxplot(d(group == 2, :), 'colors', oc_color, 'Labels', list_tract, 'PlotStyle', 'compact', 'Widths', 1, 'Orientation', 'horizontal')
-xtickangle(90)
-title('Older Children')
-ylabel('Track Name')
-xlabel('Streamline Count')
-set(gca, 'XScale', 'log')
-xlim([1 100000])
-box off
-print(fullfile(rootDir, 'plots-singleshell', 'plot_singleshell_boxplot_streamlinecount_oc'), '-dpng')
-print(fullfile(rootDir, 'plots-singleshell', 'eps', 'plot_singleshell_boxplot_streamlinecount_oc'), '-depsc')
-
-figure(4)
-boxplot(d(group == 3, :), 'colors', a_color, 'Labels', list_tract, 'PlotStyle', 'compact', 'Widths', 1, 'Orientation', 'horizontal')
+boxplot(d(group == 2, :), 'colors', a_color, 'Labels', list_tract, 'PlotStyle', 'compact', 'Widths', 1, 'Orientation', 'horizontal')
 xtickangle(90)
 title('Adults')
 ylabel('Track Name')

@@ -3,7 +3,7 @@ format shortG
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-group = 'adults'; % adults, children
+group = 'children'; % adults, children
 
 hemisphere = 'both2'; % left, right, both, both2
 
@@ -15,15 +15,18 @@ n_rep = 10000; % for kmeans, number of clustering steps taken; chooses best base
 % Set working directories.
 rootDir = '/Volumes/240/lwx/';
 
-dorsalcolor = [224 83 114]/255; %salmon
-ventralcolor= [189 80 199]/255; % purple
-verticalcolor = [161 95 84]/255; % brown
+dorsalcolor = [237 177 32]/255; % burnt yellow
+ventralcolor= [0 127 255]/255; % dark blue
+verticalcolor = [27 102 87]/255; % dark turquoise
 darkgray = [150 150 150]/255;
 gray = [175 175 175]/255;
 lightgray = [200 200 200]/255;
+midnightblue = [25 25 112]/255;
+
+% blue shades
 
 linestyle = 'none';
-marker = 'o'; markersize = 16;
+marker = 'o'; markersize = 20;
 fontname = 'Arial'; fontsizex = 16; fontsizey = 16; fontsizez = 16; fontangle = 'italic'; fontcolor = [0 0 0]; fontsmoothing = 'off';
 yticklength = 0.05; xticklength = 0.05; zticklength = 0.05;
 
@@ -360,7 +363,7 @@ print(fullfile(rootDir, 'plots-singleshell', 'eps', ['plot_fa_singleshell_' hemi
 hold off;
 
 figure(4)
-bar(eigvals, 'FaceColor', 'k', 'EdgeColor', 'k', 'FaceAlpha', .5, 'EdgeAlpha', .5)
+bar(eigvals, 'FaceColor', midnightblue, 'EdgeColor', midnightblue); %, 'FaceAlpha', .5, 'EdgeAlpha', .5)
 xlimhi = 8.5; xlimlo = 0.5;
 xax = get(gca, 'xaxis');
 xax.Limits = [xlimlo xlimhi];
@@ -435,38 +438,47 @@ if n_clust == 3
     g = gscatter(XGrid(:,1), XGrid(:,2), idx2Region, [darkgray; gray; lightgray], '.');
     g(1).MarkerSize = markersize; g(2).MarkerSize = markersize; g(3).MarkerSize = markersize;
     
-    % Add centroids.
-    scatter(C(1, 1), C(1, 2), 'Marker', marker, 'MarkerFaceColor', darkgray, 'MarkerEdgeColor', darkgray, 'SizeData', 100)
-    scatter(C(2, 1), C(2, 2), 'Marker', marker, 'MarkerFaceColor', gray, 'MarkerEdgeColor', gray, 'SizeData', 100)
-    scatter(C(3, 1), C(3, 2), 'Marker', marker, 'MarkerFaceColor', lightgray, 'MarkerEdgeColor', lightgray, 'SizeData', 100)
-    
 elseif n_clust == 2
     
     % Add grid.
     g = gscatter(XGrid(:,1), XGrid(:,2), idx2Region, [gray; lightgray], '.');
     g(1).MarkerSize = markersize; g(2).MarkerSize = markersize;
     
-    % Add centroids.
-    scatter(C(1, 1), C(1, 2), 'Marker', marker, 'MarkerFaceColor', gray, 'MarkerEdgeColor', gray, 'SizeData', 100)
-    scatter(C(2, 1), C(2, 2), 'Marker', marker, 'MarkerFaceColor', lightgray, 'MarkerEdgeColor', lightgray, 'SizeData', 100)
-    
 end
 
 % Add points.
 markersize = 16;
 plot(Y(v_idx, 1), Y(v_idx, 2), 'LineStyle', linestyle, 'Marker', marker, 'MarkerSize', markersize, ...
-    'MarkerFaceColor', ventralcolor, 'MarkerEdgeColor', ventralcolor);
+    'MarkerFaceColor', ventralcolor, 'MarkerEdgeColor', 'w');
 plot(Y(vp_idx, 1), Y(vp_idx, 2), 'LineStyle', linestyle, 'Marker', marker, 'MarkerSize', markersize, ...
-    'MarkerFaceColor', verticalcolor, 'MarkerEdgeColor', verticalcolor);
+    'MarkerFaceColor', verticalcolor, 'MarkerEdgeColor', 'w');
 plot(Y(d_idx, 1), Y(d_idx, 2), 'LineStyle', linestyle, 'Marker', marker, 'MarkerSize', markersize, ...
-    'MarkerFaceColor', dorsalcolor, 'MarkerEdgeColor', dorsalcolor);
+    'MarkerFaceColor', dorsalcolor, 'MarkerEdgeColor', 'w');
 
+% Add centroids (do this now so that it can be on the top layer for the bcase where there is only one tract in a cluster).
+if n_clust == 3
+    
+    % Add centroids.
+    scatter(C(1, 1), C(1, 2), 'Marker', '+', 'MarkerFaceColor', 'w', 'MarkerEdgeColor', 'w', 'SizeData', 100)
+    scatter(C(2, 1), C(2, 2), 'Marker', '+', 'MarkerFaceColor', 'w', 'MarkerEdgeColor', 'w', 'SizeData', 100)
+    scatter(C(3, 1), C(3, 2), 'Marker', '+', 'MarkerFaceColor', 'w', 'MarkerEdgeColor', 'w', 'SizeData', 100)
+    
+elseif n_clust == 2
+    
+    % Add centroids.
+    scatter(C(1, 1), C(1, 2), 'Marker', '+', 'MarkerFaceColor', 'w', 'MarkerEdgeColor', 'w', 'SizeData', 100)
+    scatter(C(2, 1), C(2, 2), 'Marker', '+', 'MarkerFaceColor', 'w', 'MarkerEdgeColor', 'w', 'SizeData', 100)
+    
+end
+
+% % Add tractnames.
 % tractnames = {'SLF12', 'SLF3', 'MDLFang', 'MDLFspl', 'TPC', 'pArc', 'ILF', 'IFOF'};
 % t = text(Y(:,1)-0.05,Y(:,2)+0.08,tractnames, 'Color', 'k', 'FontSize', 16);
 % t(1).Color = dorsalcolor; t(2).Color = dorsalcolor;
 % t(3).Color = verticalcolor; t(4).Color = verticalcolor; t(5).Color = verticalcolor; t(6).Color = verticalcolor;
 % t(7).Color = ventralcolor; t(8).Color = ventralcolor;
 
+% Format axes.
 xax = get(gca, 'xaxis');
 xax.Limits = [xlimlo xlimhi];
 xax.TickValues = [xlimlo ((xlimlo+xlimhi)/2)+(xlimlo/2) (xlimlo+xlimhi)/2 ((xlimlo+xlimhi)/2)+(xlimhi/2) xlimhi];

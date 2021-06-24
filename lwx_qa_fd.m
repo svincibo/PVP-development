@@ -1,9 +1,8 @@
 clear all; close all; clc
 format shortG
 
-yc_color = [0.6350 0.0780 0.1840]; %red
-oc_color = [0 0.4470 0.7410]; %blue
-a_color = [0.41176 0.41176 0.41176]; %gray
+a_color = [0 0 0]; %[75 75 75]/255; % gray [.146 0 0]; % light black
+c_color = [204 0 204]/255; %pink [178 34 34]/255; % firebrick red [0 .73 .73]; % turquoise
 
 % Set working directories.
 rootDir = '/Volumes/240/lwx/';
@@ -26,7 +25,7 @@ if strcmp(remove_outliers, 'yes')
     % 318, snr is below 2 SD of group mean and dwi image has major distortions, visual inspection
     
     % Identify outliers to be removed - liberal removal.
-    outlier = [108 116 119 125 126 206 214 303 317 318];
+    outlier = [108 116 125 126 203 206 212 214 315 316 318];
     % 116, FD > 2
     % 119, FD > 2
     % 125, FD > 2
@@ -114,6 +113,7 @@ for s = 1:size(grp_contents, 1)
     
 end % end s
 
+
 % Remove outliers.
 if strcmp(remove_outliers, 'yes') && exist('outlier')
     
@@ -146,6 +146,10 @@ disp('Check for group differences in FD.')
 [~, tableout, ~] = anova1(meanmotion, group', 'off');
 disp(['F(' num2str(tableout{2, 3}) ', ' num2str(tableout{3, 3}) ') = ' num2str(tableout{2, 5}) ', p = ' num2str(tableout{2, 6}) '.'])
 
+disp('Check for child vs. adult differences in FD.')
+[h, p, ci stats] = ttest2(meanmotion(group ~= 3), meanmotion(group == 3));
+disp(['t(' num2str(stats.df) ') = ' num2str(stats.tstat) ', p = ' num2str(p) '.'])
+
 % Visualize: group differences
 figure(2)
 hold on;
@@ -163,12 +167,10 @@ xticklength = 0.05;
 xtickvalues = [1 2 3];
 alphablend = .8;
 
-b1 = bar(1, nanmean(meanmotion(group == 1)), 'FaceColor', yc_color, 'EdgeColor', yc_color, 'FaceAlpha', alphablend);
-plot([1 1], [nanmean(meanmotion(group == 1)) - nanstd(meanmotion(group == 1)) nanmean(meanmotion(group == 1)) + nanstd(meanmotion(group == 1))], 'Color', yc_color)
-b2 = bar(2, nanmean(meanmotion(group == 2)), 'FaceColor', oc_color, 'EdgeColor', oc_color, 'FaceAlpha', alphablend);
-plot([2 2], [nanmean(meanmotion(group == 2)) - nanstd(meanmotion(group == 2)) nanmean(meanmotion(group == 2)) + nanstd(meanmotion(group == 2))], 'Color', oc_color)
-b3 = bar(3, nanmean(meanmotion(group == 3)), 'FaceColor', a_color, 'EdgeColor', a_color, 'FaceAlpha', alphablend);
-plot([3 3], [nanmean(meanmotion(group == 3)) - nanstd(meanmotion(group == 3)) nanmean(meanmotion(group == 3)) + nanstd(meanmotion(group == 3))], 'Color', a_color)
+b1 = bar(1, nanmean(meanmotion(group ~= 3)), 'FaceColor', c_color, 'EdgeColor', c_color, 'FaceAlpha', alphablend);
+plot([1 1], [nanmean(meanmotion(group ~= 3)) - nanstd(meanmotion(group ~= 3)) nanmean(meanmotion(group ~= 3)) + nanstd(meanmotion(group ~= 3))], 'Color', c_color)
+b2 = bar(2, nanmean(meanmotion(group == 3)), 'FaceColor', a_color, 'EdgeColor', a_color, 'FaceAlpha', alphablend);
+plot([2 2], [nanmean(meanmotion(group == 3)) - nanstd(meanmotion(group == 3)) nanmean(meanmotion(group == 3)) + nanstd(meanmotion(group == 3))], 'Color', a_color)
 
 % xlim_lo = min(age)-1;
 % xlim_hi = max(age)+1;
@@ -177,16 +179,15 @@ ylim_hi = 3; %max(meanmotion)+0.5;
 
 % xaxis
 xax = get(gca, 'xaxis');
-xax.Limits = [0.5 3.5];
-xax.TickValues = [1 2 3];
+xax.Limits = [0.5 2.5];
+xax.TickValues = [1 2];
 xax.TickDirection = 'out';
 xax.TickLength = [yticklength yticklength];
-xlabels = {'Younger Children', 'Older Children', 'Adults'};
+xlabels = {'Children', 'Adults'};
 xlabels = cellfun(@(x) strrep(x, ' ', '\newline'), xlabels, 'UniformOutput', false);
 xax.TickLabels = xlabels;
 xax.FontName = fontname;
 xax.FontSize = fontsize;
-xax.FontAngle = fontangle;
 
 % yaxis
 yax = get(gca,'yaxis');
@@ -204,12 +205,12 @@ a = gca;
 box off
 
 a.YLabel.String = 'Mean Framewise Displacement (FD)';
-
 a.YLabel.FontSize = fontsize;
+a.YLabel.FontAngle = fontangle;
 pbaspect([1 1 1])
 
-print(fullfile(rootDir, 'plots', 'plot_barplot_fd'), '-dpng')
-print(fullfile(rootDir, 'plots', 'eps', 'plot_barplot_fd'), '-depsc')
+print(fullfile(rootDir, 'plots-singleshell', 'plot_barplot_fd'), '-dpng')
+print(fullfile(rootDir, 'plots-singleshell', 'eps', 'plot_barplot_fd'), '-depsc')
 
 hold off;
 

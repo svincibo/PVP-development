@@ -78,6 +78,10 @@ for s = 1:size(grp_contents, 1)
     
 end % end s
 
+% Fix group so that it is just children and adult.
+group(find(group == 2)) = 1; % change older children to "children = 1""
+group(find(group == 3)) = 2; % then change adults to "adults = 2"
+
 % Concatenate and sort according to group.
 toplot = cat(2, subID', group', m', sd', b0');
 toplot = sortrows(toplot, [2 3 1], 'ascend');
@@ -104,28 +108,23 @@ fontangle = 'italic';
 xticklength = 0;
 alphablend = .8;
 
-yc_color = [0.6350 0.0780 0.1840]; %red
-oc_color = [0 0.4470 0.7410]; %blue
-a_color = [0.41176 0.41176 0.41176]; %gray
+c_color = [0 0 0]; %[75 75 75]/255; % gray [.146 0 0]; % light black
+a_color = [204 0 204]/255; %pink [178 34 34]/255; % firebrick red [0 .73 .73]; % turquoise
 
-gscatter(m, 1:length(m), group, [yc_color; oc_color; a_color], '.', 20)
+gscatter(m, 1:length(m), group, [a_color; c_color], '.', 20)
 hold on;
-gscatter(b0, 1:length(b0), group, [yc_color; oc_color; a_color], 'x', 8)
+gscatter(b0, 1:length(b0), group, [a_color; c_color], 'x', 8)
 plot([15 15], [0 length(subID)+0.5], ':k')
 
 for p = 1:length(m)
     
     if group(p) == 1
         
-        plot([m(p) - abs(sd(p)) m(p) + abs(sd(p))], [p p], 'Color', yc_color)
+        plot([m(p) - abs(sd(p)) m(p) + abs(sd(p))], [p p], 'Color', a_color)
         
     elseif group(p) == 2
         
-        plot([m(p) - abs(sd(p)) m(p) + abs(sd(p))], [p p], 'Color', oc_color)
-        
-    elseif group(p) == 3
-        
-        plot([m(p) - abs(sd(p)) m(p) + abs(sd(p))], [p p], 'Color', a_color)
+        plot([m(p) - abs(sd(p)) m(p) + abs(sd(p))], [p p], 'Color', c_color)
               
     end
     
@@ -139,7 +138,6 @@ xax.TickDirection = 'out';
 xax.TickLength = [xticklength xticklength];
 xax.FontName = fontname;
 xax.FontSize = fontsize;
-xax.FontAngle = fontangle;
 
 % yaxis
 yax = get(gca,'yaxis');
@@ -155,11 +153,16 @@ a = gca;
 %     a.TitleFontWeight = 'normal';
 box off
 
-legend({'Younger Children', 'Older Children', 'Adults'}, 'Location', 'southeast');
-% legend box off
+legend({'Children', 'Adults'}, 'Location', 'southeast');
+legend box off
 
-a.XLabel.String = 'SNR';
+a.XLabel.String = 'Signal-to-Noise Ratio (SNR)';
 a.XLabel.FontSize = fontsize;
+a.XLabel.FontAngle = fontangle;
+
+a.YLabel.String = 'Participant ID';
+a.YLabel.FontSize = fontsize;
+a.YLabel.FontAngle = fontangle;
 pbaspect([1 1 1])
 
 print(fullfile(rootDir, 'plots-singleshell', 'plot_snr'), '-dpng')

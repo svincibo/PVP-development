@@ -33,7 +33,7 @@ if strcmp(remove_outliers, 'yes')
     % 318, snr is below 2 SD of group mean and dwi image has major distortions, visual inspection
     
     % Identify outliers to be removed - liberal removal.
-    outlier = [108 116 119 125 126 127 128 206 214 303 317 318];
+    outlier = [108 116 125 126 203 206 212 214 315 316 318];
     % 116, FD > 2
     % 119, FD > 2
     % 125, FD > 2
@@ -149,6 +149,11 @@ disp('Is there b0 SNR difference between younger children and adults?')
 [h, p, ci stats] = ttest2(b0(group == 1), b0(group == 3));
 disp(['t(' num2str(stats.df) ') = ' num2str(stats.tstat) ', p = ' num2str(p) '.'])
 
+% Posthoc two-samples t-tests
+disp('Is there b0 SNR difference between children and adults?')
+[h, p, ci stats] = ttest2(b0(group ~= 3), b0(group == 3));
+disp(['t(' num2str(stats.df) ') = ' num2str(stats.tstat) ', p = ' num2str(p) '.'])
+
 disp('Are there weighted SNR differences among groups?')
 [p, tableout, stats] = anova1(m, group, 'off');
 disp(['F(' num2str(tableout{2, 3}) ', ' num2str(tableout{3, 3}) ') = ' num2str(tableout{2, 5}) ', p = ' num2str(tableout{2, 6}) '.'])
@@ -166,6 +171,11 @@ disp(['t(' num2str(stats.df) ') = ' num2str(stats.tstat) ', p = ' num2str(p) '.'
 % Posthoc two-samples t-tests
 disp('Is there weighted SNR difference between younger children and adults?')
 [h, p, ci stats] = ttest2(m(group == 1), m(group == 3));
+disp(['t(' num2str(stats.df) ') = ' num2str(stats.tstat) ', p = ' num2str(p) '.'])
+
+% Posthoc two-samples t-tests
+disp('Is there weighted SNR difference between children and adults?')
+[h, p, ci stats] = ttest2(m(group ~= 3), m(group == 3));
 disp(['t(' num2str(stats.df) ') = ' num2str(stats.tstat) ', p = ' num2str(p) '.'])
 
 % Group differences plot: b0
@@ -187,27 +197,23 @@ alphablend = .8;
 ylim_lo = 0;
 ylim_hi = 50;
 
-yc_color = [0.6350 0.0780 0.1840]; %red
-oc_color = [0 0.4470 0.7410]; %blue
-a_color = [0.41176 0.41176 0.41176]; %gray
+a_color = [0 0 0]; %[75 75 75]/255; % gray [.146 0 0]; % light black
+c_color = [204 0 204]/255; %pink [178 34 34]/255; % firebrick red [0 .73 .73]; % turquoise
 
-% Controls
-b1 = bar(1, nanmean(snr(group == 1)), 'FaceColor', yc_color, 'EdgeColor', yc_color, 'FaceAlpha', alphablend);
-plot([1 1], [nanmean(snr(group == 1)) - nanstd(snr(group == 1)) nanmean(snr(group == 1)) + nanstd(snr(group == 1))], 'Color', yc_color)
-% Beginners
-b2 = bar(2, nanmean(snr(group == 2)), 'FaceColor', oc_color, 'EdgeColor', oc_color, 'FaceAlpha', alphablend);
-plot([2 2], [nanmean(snr(group == 2)) - nanstd(snr(group == 2)) nanmean(snr(group == 2)) + nanstd(snr(group == 2))], 'Color', oc_color)
-% Experts
-b3 = bar(3, nanmean(snr(group == 3)), 'FaceColor', a_color, 'EdgeColor', a_color, 'FaceAlpha', alphablend);
-plot([3 3], [nanmean(snr(group == 3)) - nanstd(snr(group == 3)) nanmean(snr(group == 3)) + nanstd(snr(group == 3))], 'Color', a_color)
+% Children
+b1 = bar(1, nanmean(snr(group ~= 3)), 'FaceColor', c_color, 'EdgeColor', c_color, 'FaceAlpha', alphablend);
+plot([1 1], [nanmean(snr(group ~= 3)) - nanstd(snr(group ~= 3)) nanmean(snr(group ~= 3)) + nanstd(snr(group ~= 3))], 'Color', c_color)
+% Adults
+b2 = bar(2, nanmean(snr(group == 3)), 'FaceColor', a_color, 'EdgeColor', a_color, 'FaceAlpha', alphablend);
+plot([2 2], [nanmean(snr(group == 3)) - nanstd(snr(group == 3)) nanmean(snr(group == 3)) + nanstd(snr(group == 3))], 'Color', a_color)
 
 % xaxis
 xax = get(gca, 'xaxis');
-xax.Limits = [0.5 3.5];
-xax.TickValues = [1 2 3];
+xax.Limits = [0.5 2.5];
+xax.TickValues = [1 2];
 xax.TickDirection = 'out';
 xax.TickLength = [yticklength yticklength];
-xlabels = {'Younger Children', 'Older Children', 'Adults'};
+xlabels = {'Children', 'Adults'};
 xlabels = cellfun(@(x) strrep(x, ' ', '\newline'), xlabels, 'UniformOutput', false);
 xax.TickLabels = xlabels;
 xax.FontName = fontname;
@@ -245,23 +251,20 @@ snr = m;
 figure(2)
 hold on;
 
-% Controls
-b1 = bar(1, nanmean(snr(group == 1)), 'FaceColor', yc_color, 'EdgeColor', yc_color, 'FaceAlpha', alphablend);
-plot([1 1], [nanmean(snr(group == 1)) - nanstd(snr(group == 1)) nanmean(snr(group == 1)) + nanstd(snr(group == 1))], 'Color', yc_color)
-% Beginners
-b2 = bar(2, nanmean(snr(group == 2)), 'FaceColor', oc_color, 'EdgeColor', oc_color, 'FaceAlpha', alphablend);
-plot([2 2], [nanmean(snr(group == 2)) - nanstd(snr(group == 2)) nanmean(snr(group == 2)) + nanstd(snr(group == 2))], 'Color', oc_color)
-% Experts
-b3 = bar(3, nanmean(snr(group == 3)), 'FaceColor', a_color, 'EdgeColor', a_color, 'FaceAlpha', alphablend);
-plot([3 3], [nanmean(snr(group == 3)) - nanstd(snr(group == 3)) nanmean(snr(group == 3)) + nanstd(snr(group == 3))], 'Color', a_color)
+% Adults
+b1 = bar(1, nanmean(snr(group == 1)), 'FaceColor', c_color, 'EdgeColor', c_color, 'FaceAlpha', alphablend);
+plot([1 1], [nanmean(snr(group ~= 3)) - nanstd(snr(group ~= 3)) nanmean(snr(group ~= 3)) + nanstd(snr(group ~= 3))], 'Color', c_color)
+% Adults
+b2 = bar(2, nanmean(snr(group == 3)), 'FaceColor', a_color, 'EdgeColor', a_color, 'FaceAlpha', alphablend);
+plot([2 2], [nanmean(snr(group == 3)) - nanstd(snr(group == 3)) nanmean(snr(group == 3)) + nanstd(snr(group == 3))], 'Color', a_color)
 
 % xaxis
 xax = get(gca, 'xaxis');
-xax.Limits = [0.5 3.5];
-xax.TickValues = [1 2 3];
+xax.Limits = [0.5 2.5];
+xax.TickValues = [1 2];
 xax.TickDirection = 'out';
 xax.TickLength = [yticklength yticklength];
-xlabels = {'Younger Children', 'Older Children', 'Adults'};
+xlabels = {'Children', 'Adults'};
 xlabels = cellfun(@(x) strrep(x, ' ', '\newline'), xlabels, 'UniformOutput', false);
 xax.TickLabels = xlabels;
 xax.FontName = fontname;

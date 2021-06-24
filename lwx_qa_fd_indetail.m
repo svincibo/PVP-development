@@ -1,9 +1,8 @@
 clear all; close all; clc
 format shortG
 
-yc_color = [0.6350 0.0780 0.1840]; %red
-oc_color = [0 0.4470 0.7410]; %blue
-a_color = [0.41176 0.41176 0.41176]; %gray
+a_color = [0 0 0]; %[75 75 75]/255; % gray [.146 0 0]; % light black
+c_color = [204 0 204]/255; %pink [178 34 34]/255; % firebrick red [0 .73 .73]; % turquoise
 
 blprojectid = 'proj-5e61139282b37f2cfe8fdb28';
 
@@ -94,6 +93,10 @@ for s = 1:size(grp_contents, 1)
     
 end % end s
 
+% Fix group so that it is just children and adult.
+group(find(group == 2)) = 1; % change older children to "children = 1""
+group(find(group == 3)) = 2; % then change adults to "adults = 2"
+
 meanmotion = mean(motion, 2);
 sd = std(motion, 0, 2);
 
@@ -122,20 +125,16 @@ fontangle = 'italic';
 xticklength = 0;
 alphablend = .8;
 
-gscatter(fd, 1:length(fd), group, [yc_color; oc_color; a_color], '.', 30)
+gscatter(fd, 1:length(fd), group, [c_color; a_color], '.', 30)
 
 hold on;
 for p = 1:length(fd)
     
     if group(p) == 1 
         
-        plot([fd(p) - abs(sd(p)) fd(p) + abs(sd(p))], [p p], 'Color', yc_color)
+        plot([fd(p) - abs(sd(p)) fd(p) + abs(sd(p))], [p p], 'Color', c_color)
         
     elseif group(p) == 2 
-        
-        plot([fd(p) - abs(sd(p)) fd(p) + abs(sd(p))], [p p], 'Color', oc_color)
-        
-    elseif group(p) == 3 
         
         plot([fd(p) - abs(sd(p)) fd(p) + abs(sd(p))], [p p], 'Color', a_color)
         
@@ -168,11 +167,16 @@ a = gca;
 %     a.TitleFontWeight = 'normal';
 box off
 
-legend({'Younger Children', 'Older Children', 'Adults'}, 'Location', 'northeast');
+legend({'Children', 'Adults'}, 'Location', 'southeast');
 legend box off
 
 a.XLabel.String = 'Framewise Displacement (FD)';
 a.XLabel.FontSize = fontsize;
+a.XLabel.FontAngle = fontangle;
+
+a.YLabel.String = 'Participant ID';
+a.YLabel.FontSize = fontsize;
+a.YLabel.FontAngle = fontangle;
 pbaspect([1 1 1])
 
 print(fullfile(rootDir, 'plots-singleshell', 'plot_fd'), '-dpng')

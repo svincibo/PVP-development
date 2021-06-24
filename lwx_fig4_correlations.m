@@ -7,7 +7,10 @@ rootDir = '/Volumes/240/lwx/';
 multcompcorrection = 'no';
 
 hemisphere = 'both2';% left, right, both, both2
-group = 'adults'; % adults, children
+group = 'children'; % adults, children
+
+dorsalcolor = [236 176 32]/255; %burnt yellow
+ventralcolor= [14 114 184]/255; % blue
 
 %% READ IN DATA AND ORGANIZE.
 
@@ -202,9 +205,8 @@ else
     
 end
 
-% load(fullfile(rootDir, 'supportFiles', 'redblue_colormap.mat'))
-% colormap(redblue./255)
-colormap(parula)
+load(fullfile(rootDir, 'supportFiles', 'redblue_colormap.mat'))
+colormap(flipud(redblue(1:128, :)./255));
 cb = colorbar; caxis([0 1]); cb.TickLength = 0.0000000001;
 set(get(cb,'ylabel'),'string','correlation');
 set(gca,'color', .75*[1 1 1]);
@@ -237,9 +239,9 @@ fontangle = 'italic';
 fontcolor = [0 0 0];
 fontsmoothing = 'off';
 yticklength = 0.05; xticklength = 0.05; zticklength = 0.05;
-dorsalcolor = [224 83 114]/255; %salmon
-ventralcolor= [189 80 199]/255; % purple
-verticalcolor = [161 95 84]/255; % brown
+% dorsalcolor = [224 83 114]/255; %salmon
+% ventralcolor= [189 80 199]/255; % purple
+% verticalcolor = [161 95 84]/255; % brown
 ymax = .25;
 
 % --- Correlations of dorsal with vertical

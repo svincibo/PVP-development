@@ -11,8 +11,8 @@ hemisphere = 'both'; %left, right , both
 save_figures = 'yes';
 alphastat = 0.66; % to return 1 SD, for 95% CI use .05
 
-color_adults = [.146 0 0]; % brown
-color_children = [178 34 34]/255; % firebrick red [0 .73 .73]; % turquoise
+color_adults = [0 0 0]; %[75 75 75]/255; % gray [.146 0 0]; % light black
+color_children = [204 0 204]/255; %pink [178 34 34]/255; % firebrick red [0 .73 .73]; % turquoise
 
 % Should outliers be removed? If so, which subIDs?
 remove_outliers = 'yes';
@@ -153,10 +153,10 @@ end
 % figure(1)
 % hold on;
 % 
-% child_mean = [nanmean(vof_child) mean(hv_child) mean(pv_child) mean(hd_child) nanmean(fat_child)];
-% adult_mean = [nanmean(vof_adult) mean(hv_adult) mean(pv_adult) mean(hd_adult) nanmean(fat_adult)];
+% child_mean = [nanmean(vof_child) nanmean(hv_child) mean(pv_child) mean(hd_child) nanmean(fat_child)];
+% adult_mean = [nanmean(vof_adult) nanmean(hv_adult) mean(pv_adult) mean(hd_adult) nanmean(fat_adult)];
 % 
-% child_sd = [std(vof_child) std(hv_child) std(pv_child) std(hd_child) std(fat_child)];
+% child_sd = [nanstd(vof_child) nanstd(hv_child) std(pv_child) std(hd_child) nanstd(fat_child)];
 % adult_sd = [std(vof_adult, 'omitnan') std(hv_adult) std(pv_adult) std(hd_adult) std(fat_adult, 'omitnan')];
 
 % child_ci = 1.96*[std(vof_child)/sqrt(vof_n_child) std(hv_child)/sqrt(hv_n_child) std(pv_child)/sqrt(pv_n_child) std(hd_child)/sqrt(hd_n_child) std(fat_child)/sqrt(hd_n_child)];
@@ -227,8 +227,8 @@ hold on;
 coloralpha = .1;
 
 % Means (do this first for legend and then second to keep it on top layer).
-child_mean = [nanmean(vof_child) mean(hv_child) mean(pv_child) mean(hd_child) nanmean(fat_child)];
-adult_mean = [nanmean(vof_adult) mean(hv_adult) mean(pv_adult) mean(hd_adult) nanmean(fat_adult)];
+child_mean = [nanmean(vof_child) nanmean(hv_child) mean(pv_child) mean(hd_child) nanmean(fat_child)];
+adult_mean = [nanmean(vof_adult) nanmean(hv_adult) mean(pv_adult) mean(hd_adult) nanmean(fat_adult)];
 
 xval = linspace(1, length(child_mean), length(child_mean));
 
