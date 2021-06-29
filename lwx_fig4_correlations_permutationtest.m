@@ -58,57 +58,57 @@ G = [0 1 1 3 3 3 3 2 2 0];
 % Get real distribution of vv-vd difference: Ventral-vertical correlation greater than dorsal-vertical correlation.
 vv_adult = rho_adult(find(G==2), find(G==3)); vv_adult = vv_adult(:);
 vd_adult = rho_adult(find(G==1), find(G==3)); vd_adult = vd_adult(:);
+adult = vv_adult - vd_adult;
 vv_child = rho_child(find(G==2), find(G==3)); vv_child = vv_child(:);
 vd_child = rho_child(find(G==1), find(G==3)); vd_child = vd_child(:);
+child = vv_child - vd_child;
 
 %% Permutation testing for interaction between correlations pair (dorsal-vertical and dorsal-ventral correlations) and age group (children and adults).
 
 % Get real distribution.
-interaction = vv_child - vd_child - (vv_adult - vd_adult); 
-mu_interaction = nanmean(interaction(:));
-sigma_interaction = nanstd(interaction(:));
+diff_real = child-adult; 
+mu_real = nanmean(diff_real(:));
+sigma_real = nanstd(diff_real(:));
 
 % Create null distribution of vv-vd difference, where the correlation category (i.e., vertical-ventral, vertical-dorsal) and 
 % age category (i.e., children, adult) labelling are broken.
-null_dis = [vv_child(:); vd_child(:); vv_adult(:); vd_adult(:)];
+null_dis = [child(:); adult(:)];
 for i = 1:10000
     
     % Randomly select a permutation with replacement.
-    this_vv_child = randsample(null_dis, size(vv_child, 1), true);
+    this_child = randsample(null_dis, size(child, 1), true);
+    
+%     % Randomly select a permutation with replacement.
+%     this_vd_child = randsample(null_dis, size(vd_child, 1), true);
     
     % Randomly select a permutation with replacement.
-    this_vd_child = randsample(null_dis, size(vd_child, 1), true);
+    this_adult = randsample(null_dis, size(adult, 1), true);
     
-    % Randomly select a permutation with replacement.
-    this_vv_adult = randsample(null_dis, size(vv_adult, 1), true);
-    
-    % Randomly select a permutation with replacement.
-    this_vd_adult = randsample(null_dis, size(vd_adult, 1), true);
+%     % Randomly select a permutation with replacement.
+%     this_vd_adult = randsample(null_dis, size(vd_adult, 1), true);
     
     % Get the correlation at that location.
   %  interaction_null = nans(size(this_vv_child))
-    interaction_null(i) = mean(this_vv_child) - mean(this_vd_child) - (mean(this_vv_adult) - mean(this_vd_adult));
+    null_diff(i) = mean(this_child) - mean(this_adult);
     
     clear this_vv this_vd
     
 end
-mu_interaction_null=nanmean(interaction_null);
-sigma_interaction_null=nanstd(interaction_null);
+mu_null=nanmean(null_diff);
+sigma_null=nanstd(null_diff);
 
 % Test for significance.
-z = (mu_interaction - mu_interaction_null)./sigma_interaction_null;
+z = (mu_real - mu_null)./sigma_null;
 p = 1-normcdf(abs(z), 0, 1);
 disp(['z = ' num2str(z) ', p = ' num2str(p)]);
 
 % Another way to do the significance test.
-p=10;
-Y = prctile(interaction_null,p);
-if abs(mu_interaction) > abs(Y)
-   fprintf('Significant at %d', p)
+p=1;
+Y = prctile(null_diff,p);
+if abs(mu_real) > abs(Y)
+   fprintf('Significant at p < .0%d\r', p)
 else
-   fprintf('NOT Significant at %d', p)
+   fprintf('NOT Significant at p < .0%d\r', p)
 end
 
-disp(['mean vv child = ' num2str(mean(vv_child, 'all')) ', mean vd child = ' num2str(mean(vd_child, 'all'))]);
-disp(['mean vv adult = ' num2str(mean(vv_adult, 'all')) ', mean vd adult = ' num2str(mean(vd_adult, 'all'))]);
-
+disp(['mean diff child = ' num2str(mean(child, 'all')) ', mean diff adult = ' num2str(mean(adult, 'all'))]);
